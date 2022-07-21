@@ -1,6 +1,8 @@
 PRTG API SIMPLIFIED
 ===================
 
+https://pypi.org/project/PRTGAPI/1.0/
+
 This python package helps simplify the PRTG API (v1) by making the experience more pythonic.
 
 The current methods are:
