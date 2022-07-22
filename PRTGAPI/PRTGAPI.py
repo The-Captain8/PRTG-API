@@ -43,7 +43,7 @@ class PRTGServer:
 
         return response.json()['probes']
 
-    def get_sensor_list(self, device_id: str, count=500):
+    def get_sensor_list(self, device_id, count=500):
         """
         Gets a list of all the sensors from a given device.
 
@@ -70,52 +70,43 @@ class PRTGServer:
 
         return response.json()['devices']
 
-    def get_device(self, device_id: str):
+    def get_object(self, object_id=None, object_name: str = None):
         """
-        Gets a specific device.
+        Gets a specific object (probe, device, sensor) from either its name or ID.
 
-        :param device_id: Object ID of the device.
-        :return: A list of the device attributes in JSON format.
+        :param object_id: Object ID of the object.
+        :param object_name: The name of the object.
+        :return: A list of the object attributes in JSON format.
         """
-        response = requests.get(
-            f"https://{self.server_address}/api/table.json?output=json&columns=objid,probe,group,device,host,status&filter_objid={device_id}{self.auth}",
-            verify=self.verify)
+        if not object_id and not object_name:
+            raise ValueError('Object ID or Object Name parameter is required.')
 
-        return response.json()[""][0]
+        if object_id:
+            response = requests.get(
+                f"https://{self.server_address}/api/table.json?output=json&columns=objid,probe,group,device,host,name,status&filter_objid={object_id}{self.auth}",
+                verify=self.verify)
 
-    def find_device_id(self, device_name: str):
-        """
-        Gets a specific device id, from its name.
-
-        :param device_name: Name of the device.
-        :return: A list of the device attributes in JSON format.
-        """
-        response = requests.get(
-            f"https://{self.server_address}/api/table.json?output=json&columns=objid,probe,group,device,host,name,status&filter_name=@sub({device_name}){self.auth}",
-            verify=self.verify)
+        else:
+            response = requests.get(
+                f"https://{self.server_address}/api/table.json?output=json&columns=objid,probe,group,device,host,name,status&filter_name=@sub({object_name}){self.auth}",
+                verify=self.verify)
 
         try:
-            response = response.json()
-            id = response[""][0]['objid']
-            name = response[""][0]['name']
+            response = response.json()[""][0]
         except IndexError:
-            id = None
-            name = None
-            print('Device with that name not found')
+            response = None
+            print('Error finding object with that ID/name.')
 
-        info = {
-            'id': id,
-            'name': name
-        }
-        return info
+        return response
 
-    def remove_object(self, object_ID):
+    def remove_object(self, object_ID: str):
         """
         Removes an object in PRTG.
 
         :param object_ID: The ID of the object (sensor, device, probe, ect.).
         :return: The response from the server.
         """
+
         response = requests.get(
             f"https://{self.server_address}/api/deleteobject.htm?id={object_ID}&approve=1{self.auth}",
             verify=self.verify)
@@ -163,4 +154,3 @@ class PRTGServer:
             verify=self.verify)
 
         return response
-

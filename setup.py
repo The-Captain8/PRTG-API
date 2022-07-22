@@ -11,8 +11,7 @@ The current methods are:
     * get_probe_list
     * get_sensor_list
     * get_device_list
-    * get_device
-    * find_device_id
+    * get_object
     * remove_object
     * duplicate_device
     * resume_object
@@ -32,10 +31,10 @@ The parameters are:
 
 setup(
     name='PRTGAPI',
-    version='1.02',
+    version='1.03',
     packages=['PRTGAPI'],
-    url='',
-    license='',
+    url='https://github.com/The-Captain8/PRTG-API',
+    license='https://github.com/The-Captain8/PRTG-API/blob/main/LICENSE',
     author='The-Captain8',
     author_email='',
     description='A package meant to make interfacing with the PRTG API more simple.',

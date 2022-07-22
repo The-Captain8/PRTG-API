@@ -10,8 +10,7 @@ The current methods are:
     * get_probe_list
     * get_sensor_list
     * get_device_list
-    * get_device
-    * find_device_id
+    * get_object
     * remove_object
     * duplicate_device
     * resume_object
